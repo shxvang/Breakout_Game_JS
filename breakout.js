@@ -12,6 +12,9 @@ paddleImg.setAttribute("id","paddleImage");
 const ballImg = new Image();
 ballImg.src = "ball.png";
 
+const brickImg = new Image();
+brickImg.src = "brickP1.png";
+
 let LIFE = 3;
 const PADDLE_WIDTH = 300;
 const PADDLE_HEIGHT = 70;
@@ -35,6 +38,17 @@ let ball={
     speed: 4
 };
 
+let brick = {
+    row: 4,
+    column: 10,
+    width: 70,
+    height: 35,
+    offSetLeft: 20,
+    marginLeft: 70,
+    offSetTop: 10,
+    marginTop: 30,
+};
+
 function drawPaddle(isFirst = true){
     if(!isFirst){
         ctx.clearRect(0, 0, cvs.width, cvs.height);
@@ -42,7 +56,7 @@ function drawPaddle(isFirst = true){
     }
         // console.log("bal drawn")
         ctx.drawImage(paddleImg,paddle.x,paddle.y,PADDLE_WIDTH,PADDLE_HEIGHT);
-        // ctx.drawImage(ballImg, 50, 50, 30, 30);
+        // ctx.drawImage(brickImg, 50, 50, 30, 30);
         // ctx.drawImage(ballImg, ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
     
 }
@@ -96,11 +110,11 @@ function moveBall(){
 }
     
 function ballWallCollision(){
-    if(ball.x + BALL_WIDTH > cvs.width || ball.x - BALL_WIDTH < 0){
+    if(ball.x + BALL_WIDTH > cvs.width || ball.x <= 0){
         ball.dx = -ball.dx;
         console.log("in case1---");
     }
-    if(ball.y - BALL_HEIGHT <= 0){
+    if(ball.y <= 0){
         ball.dy = -ball.dy;
     }
     if(ball.y + BALL_HEIGHT > cvs.height){
@@ -129,12 +143,65 @@ function ballPaddleColision(){
     }
 }
 
+let bricks = [];
+function createBrick(){
+    for(let r = 0; r < brick.row; r++){
+        bricks[r] = [];
+        for(let c = 0; c < brick.column; c++){
+            bricks[r][c] = {
+                x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft + brick.marginLeft,
+                y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop,
+                status: true
+            };
+        }
+    }
+    console.log("in create---");
+}
+
+
+createBrick();
+function drawBricks(){
+    // createBrick();
+    for(let r = 0; r < brick.row; r++){
+        for(let c = 0; c < brick.column; c++){
+           let b = bricks[r][c];
+           if(b.status){   
+               ctx.drawImage(brickImg,b.x,b.y,brick.width,brick.height);
+            }
+        }
+    }
+}
+
+function brickBallCollision(){
+    for(let r = 0; r < brick.row; r++){
+        for(let c = 0; c < brick.column; c++){
+           let b = bricks[r][c];
+           if(b.status){   
+                if(ball.x + BALL_WIDTH >= b.x && ball.x + BALL_WIDTH <= b.x + brick.width && (ball.y <= b.y || ball.y - b.y <= BALL_WIDTH)){
+                    b.status = false;
+                    let collidePoint = (ball.x + BALL_WIDTH/2) - (b.x + brick.width/2); 
+                    collidePoint /= brick.width/2;
+                    let angle = collidePoint * Math.PI/3;
+                    ball.dx = ball.speed * Math.sin(angle);
+                    if(ball.y <= b.y){        
+                        ball.dy = ball.speed * Math.cos(angle);
+                    }  
+                    if(ball.y - b.y <= BALL_WIDTH){
+                        ball.dy = - ball.speed * Math.cos(angle);
+                    }
+                }
+           }
+        }
+    }
+}
+
 let count=0
 function draw(){
     // console.log("in draw")
     drawPaddle(count>0 ? false : true);
     count++;
     drawBall();
+    drawBricks();
 }
 
 function update(){
@@ -142,6 +209,7 @@ function update(){
     moveBall();
     ballWallCollision();
     ballPaddleColision();
+    brickBallCollision();
 }
 
 function loop(){
