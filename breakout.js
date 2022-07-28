@@ -21,6 +21,8 @@ const PADDLE_HEIGHT = 70;
 const PADDLE_MARGIN_BOTTOM = 30;
 const BALL_WIDTH = 30;
 const BALL_HEIGHT = 30;
+let SCORE = 0;
+const SCORE_UNIT = 10;
 
 let paddle={
     x: cvs.width / 2 - PADDLE_WIDTH / 2,
@@ -33,17 +35,17 @@ let paddle={
 let ball={
     x: cvs.width/2 - BALL_WIDTH/2,
     y: paddle.y - BALL_HEIGHT/4 ,
-    dx: 3*(Math.random() * 2 - 1),
+    dx: 3*(Math.floor(Math.random() * 2)),
     dy: -3,
-    speed: 4
+    speed: 5
 };
 
 let brick = {
-    row: 4,
-    column: 10,
+    row: 5,
+    column: 13,
     width: 70,
     height: 35,
-    offSetLeft: 20,
+    offSetLeft: 2,
     marginLeft: 70,
     offSetTop: 10,
     marginTop: 30,
@@ -126,14 +128,14 @@ function ballWallCollision(){
 function resetBallAndPaddle(){
     ball.x = cvs.width/2 - BALL_WIDTH/2;
     ball.y = paddle.y - BALL_HEIGHT/4;
-    ball.dx = 3*(Math.random() * 2 - 1);
+    ball.dx = 3*(Math.floor(Math.random() * 2)),
     ball.dy = -3;
     paddle.x = cvs.width / 2 - PADDLE_WIDTH / 2;
     paddle.y = cvs.height - PADDLE_HEIGHT - PADDLE_MARGIN_BOTTOM;
 }
 
 function ballPaddleColision(){
-    if(ball.x + BALL_WIDTH >= paddle.x && ball.x + BALL_WIDTH <= paddle.x + PADDLE_WIDTH && ball.y > paddle.y){
+    if(ball.x >= paddle.x && ball.x + BALL_WIDTH <= paddle.x + PADDLE_WIDTH && ball.y > paddle.y && ball.y + BALL_HEIGHT <= paddle.y + paddle.height){
                
         let collidePoint = (ball.x + BALL_WIDTH/2) - (paddle.x + PADDLE_WIDTH/2); 
         collidePoint /= PADDLE_WIDTH/2;
@@ -160,13 +162,13 @@ function createBrick(){
 
 
 createBrick();
-function drawBricks(){
+function drawBricks(i){
     // createBrick();
     for(let r = 0; r < brick.row; r++){
         for(let c = 0; c < brick.column; c++){
            let b = bricks[r][c];
            if(b.status){   
-               ctx.drawImage(brickImg,b.x,b.y,brick.width,brick.height);
+               ctx.drawImage(brickImg[i],b.x,b.y,brick.width,brick.height);
             }
         }
     }
@@ -177,18 +179,23 @@ function brickBallCollision(){
         for(let c = 0; c < brick.column; c++){
            let b = bricks[r][c];
            if(b.status){   
-                if(ball.x + BALL_WIDTH >= b.x && ball.x + BALL_WIDTH <= b.x + brick.width && (ball.y <= b.y || ball.y - b.y <= BALL_WIDTH)){
+                // if(ball.x + BALL_WIDTH >= b.x && ball.x - BALL_WIDTH <= b.x + brick.width && (ball.y <= b.y || (ball.y - b.y <= brick.height && ball.y - b.y >= 0))){
+                //     b.status = false;
+                //     let collidePoint = (ball.x + BALL_WIDTH/2) - (b.x + brick.width/2); 
+                //     collidePoint /= brick.width/2;
+                //     let angle = collidePoint * Math.PI/3;
+                //     ball.dx = ball.speed * Math.sin(angle);
+                //     if(ball.y <= b.y){        
+                //         ball.dy = ball.speed * Math.cos(angle);
+                //     }  
+                //     if(ball.y - b.y <= BALL_WIDTH){
+                //         ball.dy = - ball.speed * Math.cos(angle);
+                //     }
+                // }
+                if(ball.x + BALL_WIDTH >= b.x && ball.x - BALL_WIDTH <= b.x + brick.width && ((ball.y <= b.y && b.y - ball.y <= BALL_HEIGHT) || (ball.y >= b.y  && ball.y - b.y <= brick.height))){
+                    ball.dy = - ball.dy;
                     b.status = false;
-                    let collidePoint = (ball.x + BALL_WIDTH/2) - (b.x + brick.width/2); 
-                    collidePoint /= brick.width/2;
-                    let angle = collidePoint * Math.PI/3;
-                    ball.dx = ball.speed * Math.sin(angle);
-                    if(ball.y <= b.y){        
-                        ball.dy = ball.speed * Math.cos(angle);
-                    }  
-                    if(ball.y - b.y <= BALL_WIDTH){
-                        ball.dy = - ball.speed * Math.cos(angle);
-                    }
+                    SCORE += SCORE_UNIT;
                 }
            }
         }
