@@ -1,4 +1,119 @@
-var cvs = document.getElementById('canva');
+const userInput = document.querySelector(".userInput")
+const mainDiv = document.querySelector(".mainDiv")
+const loading = document.querySelector("#loading")
+loading.remove()
+const canvaDiv =  document.querySelector("#wrapper")
+canvaDiv.remove()
+const body = document.querySelector("body")
+const ballStartingScreen = document.querySelector(".first")
+const shadowStartingScreen = document.querySelector(".shadowBall")
+const enterText = document.querySelector("#enter")
+const wrapperLoadingScreen = document.querySelector(".wrapperScreen")
+const classicModeBtn = document.getElementById("classic")
+const neonModeBtn = document.getElementById("neon")
+const retroModeBtn = document.getElementById("retro")
+
+neonModeBtn.addEventListener("click", neonBtnPressed)
+classicModeBtn.addEventListener("click", classicBtnPressed)
+retroModeBtn.addEventListener("click", retroBtnPressed)
+body.addEventListener("keypress", handleStart, { once: true })
+
+function handleStart(e) {
+    if (e.key == "Enter") {
+        enterText.style.setProperty("opacity", "0")
+        enterText.addEventListener("transitionend", () => {
+            shadowStartingScreen.style.setProperty("opacity", "0")
+            shadowStartingScreen.remove();
+
+            const propObj = {
+                "background": "linear-gradient(336deg, #c4ddbd, #9d3939)",
+                "background-size": "400%",
+                "width": "80vmin",
+                "height": "50vmin",
+                "border-radius": "1.5vmin",
+                "-webkit-animation": "gradient 14s ease infinite",
+                "-moz-animation": "gradient 14s ease infinite",
+                "animation": "gradient 14s ease infinite"
+            }
+            setStyles(propObj,ballStartingScreen)
+
+            wrapperLoadingScreen.style.setProperty("box-shadow", "none")
+            wrapperLoadingScreen.style.setProperty("border", "none")
+            ballStartingScreen.addEventListener("transitionend", () => {
+                ballStartingScreen.append(userInput)
+            }, { once: true })
+            userInput.style.setProperty("opacity", "1")
+            userInput.style.setProperty("display", "block")
+
+
+        })
+    }
+}
+function setStyles(propObj, elem){
+    for (const key in propObj) {
+        elem.style.setProperty(key, propObj[key])
+    }
+}
+function removeForm() {
+    const cssObj = {
+        "width" : "100vw",
+        "height" :"100vh",
+        "opacity" : "0"
+    }
+    setStyles(cssObj,ballStartingScreen)
+    ballStartingScreen.addEventListener("transitionend", () => {
+        ballStartingScreen.remove();
+        wrapperLoadingScreen.remove();
+        const propObj = {
+            "background": "linear-gradient(336deg, #c4ddbd, #9d3939)",
+            "background-size": "400%",
+            "-webkit-animation": "gradient 14s ease infinite",
+            "-moz-animation": "gradient 14s ease infinite",
+            "animation": "gradient 14s ease infinite",
+        }
+        setStyles(propObj,mainDiv)
+        mainDiv.append(loading)
+        
+        // loading.style.setProperty("display","flex")
+    },
+{
+    once: true
+}
+    )
+    const wait4Load = setTimeout(loaded,3000)
+    function loaded(){
+        console.log("in loaded")
+
+        loading.style.setProperty("opacity","0")
+        loading.addEventListener("transitionend",()=>{
+        loading.remove();
+        
+    })
+    body.append(canvaDiv)
+    mainDiv.style.setProperty("opacity","0")
+    mainDiv.addEventListener("transitionend",()=>{
+        mainDiv.remove() 
+
+    },{
+        once: true
+    })
+    game();   
+        clearTimeout(wait4Load)
+    }
+    
+}
+function neonBtnPressed() {
+    removeForm()
+
+}
+function classicBtnPressed() {
+    removeForm()
+}
+function retroBtnPressed() {
+    removeForm()
+}
+function game()
+{var cvs = document.getElementById('canva');
 var ctx = cvs.getContext('2d');
 cvs.style.border = "1px solid black";
 ctx.font = "30px Arial";
@@ -265,7 +380,7 @@ function update(){
 function loop(){
     if(LIFE){
         draw();
-       
+        // console.log("in loof func")
         update();
 
         requestAnimationFrame(loop);
@@ -275,3 +390,4 @@ function loop(){
     }
 }
 loop();
+}
