@@ -1,4 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Boogaloo&display=swap');
+
+:root {
+  --duration: 500ms;
+  --timing-function: cubic-bezier(0.71, 0.16, 0.89, 0.43)
+}
+
+* {
+  font-family: 'Righteous', cursive;
+  font-size: large;
+  color: white;
+}
+
+#body {
+  margin: 0;
+  background-color: #303030;
+  background-image: linear-gradient(23deg, #1e1e1e, #c3c3c345);
+  background-image: none;
+  width: 100%;
+}
+
+.mainDiv {
+  min-height: 100vh;
+  transition : 500ms ease-in-out;
+
+}
+
+.wrapperScreen {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  border-bottom: 1px solid #5e5e5e;
+  box-shadow: 0 28px 30px -18px grey;
+  transition: 500ms ease-in-out;
+}
+
+.first {
+  width: 8rem;
+  height: 8rem;
+  background-image: linear-gradient(336deg, #c4ddbd, #9d3939);
+  border-radius: 50%;
+  animation: updown var(--duration) var(--timing-function) 0s infinite alternate both running;
+  transition: 500ms ease-in-out;
+}
+
+.shadowBall {
+  position: absolute;
+  bottom: -1.8rem;
+  width: 4rem;
+  height: 0.5rem;
+  background-color: #000;
+  border-radius: 50%;
+  animation: adjustWidth var(--duration) var(--timing-function) 0s infinite alternate both running;
+  transition: var(--duration) ease-in-out;
+
+}
+
+#enter {
+  transition: 200ms ease-in-out;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.userInput {
+  opacity: 0;
+  font-size: 2vmin ;
+  transition: 900ms ease-in-out;
+  display: none;
+}
+
+.modeInput {
+  margin-top: 7rem;
+
+}
 #canva{
-    width: 90vw;
-    height: 90vh;
+  width: 90vw;
+  height: 90vh;
+}
+#wrapper{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.loading {
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* flex-direction: column; */
+  /* transition: 1000ms ease-in-out; */
+}
+
+.ball {
+  /* Set ball size */
+  font-size: smaller;
+  color: #000;
+  opacity: 0;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background-color: white;
+  /* Shadow gives the look of a sphere */
+  box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  animation-name: load;
+  animation-duration: 2.5s;
+  animation-iteration-count: 3000ms;
+  animation-timing-function: linear;
+}
+
+/* Delay subsequent balls. Must adjust if you change animation-duration above */
+.ball:nth-child(2) {
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+.ball:nth-child(3) {
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.ball:nth-child(4) {
+  animation-delay: 1.5s;
+  opacity: 0;
+}
+
+.ball:nth-child(5) {
+  animation-delay: 2s;
+  opacity: 0;
+}
+
+
+
+
+@keyframes load {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg) rotateX(-10deg) translateZ(35px) rotateY(90deg) scale3d(1, 1, 1);
+  }
+
+  25% {
+    opacity: 1;
+    transform: rotateY(0deg) rotateX(-15deg) translateZ(45px) rotateY(0deg) scale3d(1.1, 1.1, 1.1);
+  }
+
+  50% {
+    opacity: 0.2;
+    transform: rotateY(90deg) rotateX(-10deg) translateZ(45px) rotateY(-90deg) scale3d(1, 1, 1);
+  }
+
+  75% {
+    opacity: 0;
+    transform: rotateY(180deg) rotateX(0deg) translateZ(45px) rotateY(-180deg) scale3d(0.9, 0.9, 0.9);
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotateY(270deg) rotateX(0deg) translateZ(35px) rotateY(-270deg) scale3d(1, 1, 1);
+  }
+}
+
+@-webkit-keyframes gradient {
+  0% {
+    background-position: 0% 43%
+  }
+
+  50% {
+    background-position: 100% 58%
+  }
+
+  100% {
+    background-position: 0% 43%
+  }
+}
+
+@-moz-keyframes gradient {
+  0% {
+    background-position: 0% 43%
+  }
+
+  50% {
+    background-position: 100% 58%
+  }
+
+  100% {
+    background-position: 0% 43%
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 43%
+  }
+
+  50% {
+    background-position: 100% 58%
+  }
+
+  100% {
+    background-position: 0% 43%
+  }
+}
+
+@keyframes adjustWidth {
+  from {
+    width: 1rem;
+    background-color: #3e3e3e;
+  }
+}
+
+@keyframes updown {
+  from {
+    transform: translateY(-24px);
+  }
+
+  to {
+    transform: translateY(24px);
+  }
 }
