@@ -263,10 +263,15 @@ function update(){
 }
 
 function loop(){
-    draw();
-    // console.log("in loof func")
-    update();
+    if(LIFE){
+        draw();
+       
+        update();
 
-    requestAnimationFrame(loop);
+        requestAnimationFrame(loop);
+    }
+    else{
+        console.log("Final score---",SCORE);
+    }
 }
 loop();
