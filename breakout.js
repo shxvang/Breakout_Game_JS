@@ -113,11 +113,13 @@ function retroBtnPressed() {
     removeForm()
 }
 function game()
-{var cvs = document.getElementById('canva');
+{
+    var cvs = document.getElementById('canva');
 var ctx = cvs.getContext('2d');
 cvs.style.border = "1px solid black";
 ctx.font = "30px Arial";
-console.log(cvs.height)
+document.getElementById("life").innerHTML = "LIFE : 5";
+// console.log(cvs.height)
 let leftArrow = false;
 let rightArrow = false;
 
@@ -133,7 +135,7 @@ const brickSource = ["rgba(255, 99, 71, 0.8)","rgba(255, 99, 71, 0.6)","rgba(255
 
 // const brickSource = ["brickP1.png","brickP2.png","brickP3.png"];
 
-let LIFE = 3;
+let LIFE = 5;
 const PADDLE_WIDTH = 250;
 const PADDLE_HEIGHT = 50;
 const PADDLE_MARGIN_BOTTOM = 30;
@@ -171,6 +173,7 @@ function gameAudio(item) {
         // Autoplay was prevented.
         // Show a "Play" button so that user can start playback.
       });
+    //   console.log("audio---",item);
 }
 
 let paddle={
@@ -245,9 +248,9 @@ function movePaddle(){
         paddle.x -= paddle.dx;
     }
     // document.addEventListener('mousemove',function(e){
-        //     var paddleX = e.clientX;
-        //     paddle.x = paddleX + 'px';
-        // });
+    //         var paddleX = e.clientX;
+    //         paddle.x = paddleX + 'px';
+    //     });
 }
 
 function drawBall(){
@@ -270,6 +273,7 @@ function ballWallCollision(){
     }
     if(ball.y + BALL_HEIGHT > cvs.height){
         LIFE--;
+        document.getElementById("life").innerHTML = `LIFE : ${LIFE}`;
         resetBallAndPaddle();
     }
 }
@@ -286,7 +290,7 @@ function resetBallAndPaddle(){
 
 function ballPaddleColision(){
     if(ball.x >= paddle.x && ball.x + BALL_WIDTH <= paddle.x + PADDLE_WIDTH && ball.y > paddle.y && ball.y + BALL_HEIGHT <= paddle.y + paddle.height){
-        // gameAudio(audio_paddle);     
+        gameAudio(audio_paddle);     
         let collidePoint = (ball.x + BALL_WIDTH/2) - (paddle.x + PADDLE_WIDTH/2); 
         collidePoint /= PADDLE_WIDTH/2;
         let angle = collidePoint * Math.PI/3;
@@ -332,13 +336,14 @@ function drawBricks(){
         }
     }
 }
+
 function brickBallCollision(){
     for(let r = 0; r < brick.row; r++){
         for(let c = 0; c < brick.column; c++){
            let b = bricks[r][c];
            if(b.status){   
                 if(ball.x + BALL_WIDTH > b.x && ball.x  < b.x + brick.width && ball.y + BALL_HEIGHT > b.y && ball.y  < b.y + brick.height){
-                    // gameAudio(audio_brick);
+                    gameAudio(audio_brick);
                     if(b["hitCount"] <= 1){
                         b["hitCount"]+=1;
                         // console.log("hit count---",b["hitCount"])
@@ -351,7 +356,6 @@ function brickBallCollision(){
                         SCORE += SCORE_UNIT;
                     }
                     else{
-
                         b.status = false;
                     }
                 }   
@@ -386,6 +390,7 @@ function loop(){
         requestAnimationFrame(loop);
     }
     else{
+        document.getElementById("wrapper").innerHTML = `SCORE : ${SCORE}`;
         console.log("Final score---",SCORE);
     }
 }
