@@ -81,11 +81,12 @@
 }
 #canva{
   width: 90vw;
-  height: 90vh;
+  height: 80vh;
 }
 #wrapper{
   height: 100%;
   display: flex;
+  flex-direction:column;
   justify-content: center;
   align-items: center;
 
@@ -229,3 +230,7 @@
     transform: translateY(24px);
   }
 }
+
+/* #wrapper{
+  flex-direction:column;
+} */
