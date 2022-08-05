@@ -118,7 +118,8 @@ function game()
 var ctx = cvs.getContext('2d');
 cvs.style.border = "1px solid black";
 ctx.font = "30px Arial";
-document.getElementById("life").innerHTML = "LIFE : 5";
+let LIFE = 15;
+document.getElementById("life").innerHTML = `LIFE : ${LIFE}`;
 // console.log(cvs.height)
 let leftArrow = false;
 let rightArrow = false;
@@ -135,7 +136,6 @@ const brickSource = ["rgba(255, 99, 71, 0.8)","rgba(255, 99, 71, 0.6)","rgba(255
 
 // const brickSource = ["brickP1.png","brickP2.png","brickP3.png"];
 
-let LIFE = 5;
 const PADDLE_WIDTH = 250;
 const PADDLE_HEIGHT = 50;
 const PADDLE_MARGIN_BOTTOM = 30;
@@ -292,7 +292,7 @@ function ballPaddleColision(){
     if(ball.x >= paddle.x && ball.x + BALL_WIDTH <= paddle.x + PADDLE_WIDTH && ball.y > paddle.y && ball.y + BALL_HEIGHT <= paddle.y + paddle.height){
         gameAudio(audio_paddle);     
         let collidePoint = (ball.x + BALL_WIDTH/2) - (paddle.x + PADDLE_WIDTH/2); 
-        collidePoint /= PADDLE_WIDTH/2;
+        collidePoint /= PADDLE_WIDTH/2 ;
         let angle = collidePoint * Math.PI/3;
         ball.dx = ball.speed * Math.sin(angle);
         ball.dy = -ball.speed * Math.cos(angle);
