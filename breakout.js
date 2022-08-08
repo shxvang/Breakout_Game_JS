@@ -59,7 +59,7 @@ function setStyles(propObj, elem) {
         elem.style.setProperty(key, propObj[key])
     }
 }
-function removeForm() {
+function removeForm(modeObj) {
     const cssObj = {
         "width": "100vw",
         "height": "100vh",
@@ -69,15 +69,10 @@ function removeForm() {
     ballStartingScreen.addEventListener("transitionend", () => {
         ballStartingScreen.remove();
         wrapperLoadingScreen.remove();
-        const propObj = {
-            "background": "linear-gradient(336deg, #c4ddbd, #9d3939)",
-            "background-size": "400%",
-            "-webkit-animation": "gradient 14s ease infinite",
-            "-moz-animation": "gradient 14s ease infinite",
-            "animation": "gradient 14s ease infinite",
-        }
+        const loadingScreen = modeObj.loadingSCR;
+        const propObj = modeObj.propObj;
         setStyles(propObj, mainDiv)
-        mainDiv.append(loading)
+        if (modeObj.loader) { mainDiv.append(loading) }
 
         // loading.style.setProperty("display","flex")
     },
@@ -85,15 +80,27 @@ function removeForm() {
             once: true
         }
     )
-    const wait4Load = setTimeout(loaded, 3000)
+    const wait4Load = setTimeout(loaded, 2650)
     function loaded() {
         console.log("in loaded")
 
-        loading.style.setProperty("opacity", "0")
-        loading.addEventListener("transitionend", () => {
-            loading.remove();
+        if (modeObj.loader) {
+            loading.style.setProperty("opacity", "0")
+            loading.addEventListener("transitionend", () => {
+                loading.remove();
 
-        })
+            })
+        }
+        else {
+            const tempPropObj = {
+                "margin-top": "90vmin",
+                "transform": "scale(9)"
+
+
+            }
+            setStyles(tempPropObj, mainDiv)
+        }
+
         playerName = playerNameInput.value;
         let scoreBoardDiv = document.createElement("div");
         scoreBoardDiv.id = "scoreBoard"
@@ -102,32 +109,120 @@ function removeForm() {
         // scoreBoardDiv.innerText =`${playerName}'s score is ${currentScore}`;
         canvaDiv.append(scoreBoardDiv)
         body.append(canvaDiv)
-        mainDiv.style.setProperty("opacity", "0")
-        mainDiv.addEventListener("transitionend", () => {
-            mainDiv.remove()
-
-        }, {
-            once: true
-        })
-        game();
+        // mainDiv.style.setProperty("opacity", "0")
+        modeObj.transitionOut(mainDiv)
+        game(modeObj);
         clearTimeout(wait4Load)
-    }
+}
 
 }
 function neonBtnPressed() {
-    removeForm()
+    const neonMode = {
+        loader : false,
+        brickColor1: "rgba(255, 99, 71, 0.8)",
+        brickColor2: "rgba(255, 99, 71, 0.6)",
+        brickColor3: "rgba(255, 99, 71, 0.4)",
+        propObj : {
+            "background-image" :    `url("neonLoading.gif")`,
+            "background-repeat": "no-repeat",
+            "background-size": "cover",
+            "background-position": "center"
+        },
+        ballSrc : "neonBall.png",
+        paddleSrc : "neonPaddle.png",
+        transitionOut: function (mainDiv) {
+            mainDiv.style.setProperty("opacity", "0")
+            mainDiv.addEventListener("transitionend",
+                () => {
+                    mainDiv.remove()
+                },
+                {
+                    once: true
+                })
+        }
+    }
+    removeForm(neonMode)
 
 }
 function classicBtnPressed() {
-    removeForm()
+    const classicMode = {
+        loader: true,
+        brickColor1: "rgba(255, 99, 71, 0.8)",
+        brickColor2: "rgba(255, 99, 71, 0.6)",
+        brickColor3: "rgba(255, 99, 71, 0.4)",
+        propObj: {
+            "background": "linear-gradient(336deg, #c4ddbd, #9d3939)",
+            "background-size": "400%",
+            "-webkit-animation": "gradient 14s ease infinite",
+            "-moz-animation": "gradient 14s ease infinite",
+            "animation": "gradient 14s ease infinite",
+
+        },
+        ballSrc: "ball.png",
+        paddleSrc: "paddle.png",
+        transitionOut: function (mainDiv) {
+                mainDiv.style.setProperty("opacity", "0")
+                mainDiv.addEventListener("transitionend",
+                    () => {
+                        mainDiv.remove()
+                    },
+                    {
+                        once: true
+                    })
+            }
+    }
+    
+    removeForm(classicMode)
 }
 function retroBtnPressed() {
-    removeForm()
+    const retroMode = {
+        loader: false,
+        brickColor1: "rgba(0,0,0,1)",
+        brickColor2: "rgba(0,0,0,0.7)",
+        brickColor3: "rgba(0,0,0,0.2)",
+        paddleSrc: "retroPaddle.png",
+        ballSrc: "retroBall.png",
+        isRetro: true,
+        propObj: {
+            "background-image": `url("./retroLoading.gif")`,
+            "background-repeat": "no-repeat",
+            "background-size": "cover",
+            "background-position": "center",
+            // "transition"  : "750ms ease-in-out"
+        },
+        transitionOut: function (mainDiv) {
+            mainDiv.addEventListener("transitionend", () => {
+                // mainDiv.remove()
+                const temppObj = {
+                    "background": "#7DA980",
+                    "transition": "1ms ease-in-out"
+                }
+                setStyles(temppObj, mainDiv)
+                mainDiv.addEventListener("transitionend", () => {
+                    mainDiv.style.setProperty("opacity", "0")
+                    mainDiv.addEventListener("transitionend",
+                        () => {
+                            mainDiv.remove()
+                        },
+                        {
+                            once: true
+                        })
+                },
+                    {
+                        once: true
+                    })
+            },
+                {
+                    once: true
+                })
+        }
+    }
+    removeForm(retroMode)
 }
 const playerScore = document.createElement("div")
-const playerLife =  document.createElement("div")
+const playerLife = document.createElement("div")
 function displayScore(scoreDiv = document.getElementById("scoreBoard")) {
-    if(!playerName){
+    if (!playerName) {
 
         playerName = "Anonymous"
     }
@@ -136,8 +231,12 @@ function displayScore(scoreDiv = document.getElementById("scoreBoard")) {
     scoreDiv.append(playerScore)
     scoreDiv.append(playerLife)
 }
-function game() {
+function game(modeObj) {
     var cvs = document.getElementById('canva');
+    if (modeObj.isRetro) {
+        cvs.style.backgroundColor = "#7DA980";
+        body.style.fontFamily = "'Press Start 2P', cursive        ";
+    }
     var ctx = cvs.getContext('2d');
     cvs.style.border = "1px solid black";
     ctx.font = "30px Arial";
@@ -147,14 +246,14 @@ function game() {
     let rightArrow = false;
 
     const paddleImg = new Image();
-    paddleImg.src = "paddle.png";
+    paddleImg.src = modeObj.paddleSrc;
     paddleImg.setAttribute("id", "paddleImage");
 
     const ballImg = new Image();
-    ballImg.src = "ball.png";
+    ballImg.src = modeObj.ballSrc;
 
     // const brickImg = new Image();
-    const brickSource = ["rgba(255, 99, 71, 0.8)", "rgba(255, 99, 71, 0.6)", "rgba(255, 99, 71, 0.4)"];
+    const brickSource = [modeObj.brickColor1, modeObj.brickColor2, modeObj.brickColor3];
 
     // const brickSource = ["brickP1.png","brickP2.png","brickP3.png"];
 
