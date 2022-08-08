@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Boogaloo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 :root {
   --duration: 500ms;
   --timing-function: cubic-bezier(0.71, 0.16, 0.89, 0.43)
@@ -22,7 +23,7 @@
 
 .mainDiv {
   min-height: 100vh;
-  transition : 700ms ease-in-out;
+  transition: 700ms ease-in-out;
 
 }
 
@@ -70,7 +71,7 @@
 
 .userInput {
   opacity: 0;
-  font-size: 2vmin ;
+  font-size: 2vmin;
   transition: 900ms ease-in-out;
   display: none;
 }
@@ -79,19 +80,22 @@
   margin-top: 7rem;
 
 }
-#canva{
+
+#canva {
   width: 90vw;
   height: 80vh;
 }
-#wrapper{
+
+#wrapper {
   height: 100%;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-direction: column-reverse;
 
 }
+
 .loading {
   margin: 0 auto;
   width: 100px;
@@ -103,11 +107,56 @@
   /* flex-direction: column; */
   /* transition: 1000ms ease-in-out; */
 }
-#scoreBoard{
+
+#scoreBoard {
   font-size: 10vmin;
   display: flex;
   justify-content: space-around;
   align-items: space-around;
+}
+.neonText {
+  color: rgb(248, 219, 219);
+  text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 42px #f09,
+    0 0 82px #f09,
+    0 0 92px #f09,
+    0 0 102px rgb(255, 0, 153),
+    0 0 151px #f09;
+    animation: pulsate 0.11s ease-in-out infinite alternate; 
+}
+
+@keyframes pulsate {
+
+  100% {
+
+    text-shadow:
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px #f09,
+      0 0 80px #f09,
+      0 0 90px #f09,
+      0 0 100px #f09,
+      0 0 150px #f09;
+
+  }
+
+  0% {
+
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px #fff,
+      0 0 18px #fff,
+      0 0 38px #f09,
+      0 0 73px #f09,
+      0 0 80px #f09,
+      0 0 94px #f09,
+      0 0 140px #f09;
+
+  }
 }
 
 .ball {

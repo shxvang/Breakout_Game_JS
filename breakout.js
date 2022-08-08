@@ -19,6 +19,18 @@ classicModeBtn.addEventListener("click", classicBtnPressed)
 retroModeBtn.addEventListener("click", retroBtnPressed)
 body.addEventListener("keypress", handleStart, { once: true })
 
+playerNameInput.addEventListener("keypress",(e)=>{
+    if(e.key=="Enter"){
+        let randomMode = Math.floor(Math.random() * (2 - 0 + 1) + 0)
+        if(randomMode==1){
+            classicBtnPressed();
+        }else if(randomMode==2){
+            neonBtnPressed();
+        }else{
+            retroBtnPressed();
+        }
+    }
+})
 let SCORE = 0;
 let playerName = "";
 let LIFE = 5;
@@ -91,7 +103,7 @@ function removeForm(modeObj) {
 
             })
         }
-        else {
+        else if(modeObj.isRetro){
             const tempPropObj = {
                 "margin-top": "90vmin",
                 "transform": "scale(9)"
@@ -113,23 +125,24 @@ function removeForm(modeObj) {
         modeObj.transitionOut(mainDiv)
         game(modeObj);
         clearTimeout(wait4Load)
-}
+    }
 
 }
 function neonBtnPressed() {
     const neonMode = {
-        loader : false,
-        brickColor1: "rgba(255, 99, 71, 0.8)",
-        brickColor2: "rgba(255, 99, 71, 0.6)",
-        brickColor3: "rgba(255, 99, 71, 0.4)",
-        propObj : {
-            "background-image" :    `url("neonLoading.gif")`,
+        isNeon: true,
+        loader: false,
+        brickColor1: "rgba(255, 0, 153,1)",
+        brickColor2: "rgba(255, 0,153, 0.6)",
+        brickColor3: "rgba(255, 0, 153, 0.4)",
+        propObj: {
+            "background-image": `url("neonLoading.gif")`,
             "background-repeat": "no-repeat",
             "background-size": "cover",
             "background-position": "center"
         },
-        ballSrc : "neonBall.png",
-        paddleSrc : "neonPaddle.png",
+        ballSrc: "neonBall.png",
+        paddleSrc: "neonPaddle.png",
         transitionOut: function (mainDiv) {
             mainDiv.style.setProperty("opacity", "0")
             mainDiv.addEventListener("transitionend",
@@ -161,17 +174,17 @@ function classicBtnPressed() {
         ballSrc: "ball.png",
         paddleSrc: "paddle.png",
         transitionOut: function (mainDiv) {
-                mainDiv.style.setProperty("opacity", "0")
-                mainDiv.addEventListener("transitionend",
-                    () => {
-                        mainDiv.remove()
-                    },
-                    {
-                        once: true
-                    })
-            }
+            mainDiv.style.setProperty("opacity", "0")
+            mainDiv.addEventListener("transitionend",
+                () => {
+                    mainDiv.remove()
+                },
+                {
+                    once: true
+                })
+        }
     }
-    
+
     removeForm(classicMode)
 }
 function retroBtnPressed() {
@@ -236,6 +249,10 @@ function game(modeObj) {
     if (modeObj.isRetro) {
         cvs.style.backgroundColor = "#7DA980";
         body.style.fontFamily = "'Press Start 2P', cursive        ";
+    }
+    if (modeObj.isNeon) {
+        body.classList.add("neonText");
+        // body.style.fontFamily = "'Press Start 2P', cursive        ";
     }
     var ctx = cvs.getContext('2d');
     cvs.style.border = "1px solid black";
@@ -329,6 +346,8 @@ function game(modeObj) {
 
         }
         // console.log("bal drawn")
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "black";
         ctx.drawImage(paddleImg, paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT);
         // ctx.drawImage(brickImg, 50, 50, 30, 30);
         // ctx.drawImage(ballImg, ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
@@ -374,6 +393,8 @@ function game(modeObj) {
     }
 
     function drawBall() {
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = "black";
         ctx.drawImage(ballImg, ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
     }
 
@@ -442,12 +463,16 @@ function game(modeObj) {
 
 
     function drawBricks() {
-        // createBrick();
+        // createBrick();mo
         for (let r = 0; r < brick.row; r++) {
             for (let c = 0; c < brick.column; c++) {
                 let b = bricks[r][c];
                 // brickImg.src = brickSource[b["hitCount"]] >= 2 ? brickSource[2] : brickSource[b["hitCount"]] ;
                 let color = brickSource[b["hitCount"]] >= 2 ? brickSource[2] : brickSource[b["hitCount"]];
+                if (modeObj.isNeon) {
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = color;
+                }
                 if (b.status) {
                     // ctx.drawImage(brickImg,b.x,b.y,brick.width,brick.height);
 
