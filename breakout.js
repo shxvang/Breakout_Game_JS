@@ -346,8 +346,8 @@ function game(modeObj) {
 
         }
         // console.log("bal drawn")
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = "black";
+        // ctx.shadowBlur = 0;
+        // ctx.shadowColor = "black";
         ctx.drawImage(paddleImg, paddle.x, paddle.y, PADDLE_WIDTH, PADDLE_HEIGHT);
         // ctx.drawImage(brickImg, 50, 50, 30, 30);
         // ctx.drawImage(ballImg, ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
@@ -393,8 +393,8 @@ function game(modeObj) {
     }
 
     function drawBall() {
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = "black";
+        // ctx.shadowBlur = 0;
+        // ctx.shadowColor = "black";
         ctx.drawImage(ballImg, ball.x, ball.y, BALL_WIDTH, BALL_HEIGHT);
     }
 
