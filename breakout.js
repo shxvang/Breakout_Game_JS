@@ -94,7 +94,7 @@ function removeForm(modeObj) {
     )
     const wait4Load = setTimeout(loaded, 2650)
     function loaded() {
-        console.log("in loaded")
+        // console.log("in loaded")
 
         if (modeObj.loader) {
             loading.style.setProperty("opacity", "0")
