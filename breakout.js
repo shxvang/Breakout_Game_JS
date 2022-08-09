@@ -539,7 +539,7 @@ function game(modeObj) {
         }
         else {
             document.getElementById("wrapper").innerHTML = `SCORE : ${SCORE}`;
-            console.log("Final score---", SCORE);
+            // console.log("Final score---", SCORE);
         }
     }
     loop();
